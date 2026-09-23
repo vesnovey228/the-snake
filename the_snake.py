@@ -115,10 +115,10 @@ class Snake(GameObject):
         """Метод движения объекта 'Змейка'."""
         head_coordinate_x, head_coordinate_y = self.get_head_position()
         direction_x, direction_y = self.direction
-        new_head_x = (head_coordinate_x +
-                      GRID_SIZE * direction_x) % SCREEN_WIDTH
-        new_head_y = (head_coordinate_y +
-                      GRID_SIZE * direction_y) % SCREEN_HEIGHT
+        new_head_x = (head_coordinate_x
+                      + GRID_SIZE * direction_x) % SCREEN_WIDTH
+        new_head_y = (head_coordinate_y
+                      + GRID_SIZE * direction_y) % SCREEN_HEIGHT
         self.positions.insert(0, (new_head_x, new_head_y))
         self.last = self.positions[-1]
         while len(self.positions) > self.length:
