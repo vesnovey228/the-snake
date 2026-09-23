@@ -44,10 +44,9 @@ clock = pygame.time.Clock()
 class GameObject():
     """Игровой объект для наследования."""
 
-    def __init__(self, body_color):
+    def __init__(self):
         """Метод ввода данных игрового объекта."""
         self.position = (320, 240)
-        self.body_color = body_color
 
     def draw(self):
         """Пустой метод отрисовки."""
@@ -57,9 +56,10 @@ class GameObject():
 class Apple(GameObject):
     """'Яблоко', дочерний игровой объект."""
 
-    def __init__(self, body_color):
+    def __init__(self):
         """Метод ввода данных объекта 'Яблоко'."""
-        super().__init__(body_color)
+        super().__init__()
+        self.body_color = (255, 0, 0)
 
     def randomize_position(self, game_object):
         """Метод выбора случаного расположения объекта 'Яблоко'."""
@@ -80,10 +80,10 @@ class Apple(GameObject):
 class Snake(GameObject):
     """'Змейка', дочерний игровой объект."""
 
-    def __init__(self, body_color):
+    def __init__(self):
         """Метод ввода данных объекта 'Змейка'."""
-        super().__init__(body_color)
-
+        super().__init__()
+        self.body_color = (0, 255, 0)
         self.length = 1
         self.positions = [self.position]
         self.direction = (1, 0)
@@ -160,8 +160,8 @@ def main():
     # Инициализация PyGame:
     pygame.init()
     # Тут нужно создать экземпляры классов.
-    snake = Snake((0, 255, 0))
-    apple = Apple((255, 0, 0))
+    snake = Snake()
+    apple = Apple()
 
     while True:
         clock.tick(SPEED)
