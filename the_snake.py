@@ -47,6 +47,7 @@ class GameObject():
     def __init__(self):
         """Метод ввода данных игрового объекта."""
         self.position = (320, 240)
+        self.body_color = None
 
     def draw(self):
         """Пустой метод отрисовки."""
