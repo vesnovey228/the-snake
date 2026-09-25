@@ -54,7 +54,7 @@ class GameObject:
         self.position = DISPLAY_CENTRE
         self.body_color = None
 
-    def _draw_cell(self):
+    def draw(self):
         """Пустой метод отрисовки."""
         raise NotImplementedError
 
@@ -77,7 +77,7 @@ class Apple(GameObject):
                 self.position = new_position
                 return self.position
 
-    def _draw_cell(self):
+    def draw(self):
         """Метод отрисовки объекта 'Яблоко'."""
         rect = pg.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pg.draw.rect(screen, self.body_color, rect)
@@ -101,7 +101,7 @@ class Snake(GameObject):
         """Метод получения расположения головы Змейки."""
         return self.positions[0]
 
-    def _draw_cell(self):
+    def draw(self):
         """Метод отрисовки объекта 'Змейка'."""
         for position in self.positions[:-1]:
             rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
@@ -184,8 +184,8 @@ def main():
         if apple.position == snake.get_head_position():
             snake.length += 1
             apple.randomize_position()
-        snake._draw_cell()
-        apple._draw_cell()
+        snake.draw()
+        apple.draw()
         if snake.positions[0] in snake.positions[1:-1]:
             snake.reset()
         pg.display.update()
