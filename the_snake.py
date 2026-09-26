@@ -61,8 +61,7 @@ class GameObject:
 
 def get_taken_positions(snake):
     """Метод получения занятых позиций."""
-    taken_positions = snake.positions
-    return taken_positions
+    return snake.positions
 
 
 class Apple(GameObject):
