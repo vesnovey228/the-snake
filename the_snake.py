@@ -59,6 +59,12 @@ class GameObject:
         raise NotImplementedError
 
 
+def get_taken_positions(snake):
+    """Метод получения занятых позиций."""
+    taken_positions = snake.positions
+    return taken_positions
+
+
 class Apple(GameObject):
     """'Яблоко', дочерний игровой объект."""
 
@@ -66,14 +72,14 @@ class Apple(GameObject):
         """Метод ввода данных объекта 'Яблоко'."""
         super().__init__()
         self.body_color = APPLE_COLOR
-        self.position = self.randomize_position()
+        self.position = self.randomize_position(taken_positions)
 
-    def randomize_position(self):
+    def randomize_position(self, list_of_taken_positions):
         """Метод выбора случаного расположения объекта 'Яблоко'."""
         while True:
             new_position = ((randint(0, GRID_WIDTH - 1) * GRID_SIZE),
                             (randint(0, GRID_HEIGHT - 1) * GRID_SIZE))
-            if new_position not in taken_positions:
+            if new_position not in list_of_taken_positions:
                 self.position = new_position
                 return self.position
 
@@ -117,6 +123,7 @@ class Snake(GameObject):
         if self.last:
             last_rect = pg.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
+            self.last = None
 
     def move(self):
         """Метод движения объекта 'Змейка'."""
@@ -130,8 +137,6 @@ class Snake(GameObject):
         self.last = self.positions[-1]
         while len(self.positions) > self.length:
             del self.positions[-1]
-        global taken_positions
-        taken_positions = self.positions
 
     def update_direction(self):
         """Метод обновления направления движения Змейки."""
@@ -141,13 +146,9 @@ class Snake(GameObject):
 
     def reset(self):
         """Метод перезапуска объекта 'Змейка'."""
-        for position in self.positions[1:-1]:
-            rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
-            pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, rect)
-        for _ in self.positions[1:-1]:
-            _ = None
+        self.last = None
         self.length = 1
-        self.positions[0] = DISPLAY_CENTRE
+        self.positions = [DISPLAY_CENTRE]
         self.direction = choice((UP, DOWN, LEFT, RIGHT))
 
 
@@ -157,7 +158,7 @@ def handle_keys(game_object):
         if event.type == pg.QUIT:
             pg.quit()
             raise SystemExit
-        elif event.type == pg.KEYDOWN:
+        if event.type == pg.KEYDOWN:
             if event.key == pg.K_UP and game_object.direction != DOWN:
                 game_object.next_direction = UP
             elif event.key == pg.K_DOWN and game_object.direction != UP:
@@ -172,22 +173,25 @@ def main():
     """Главный метод, инициализация игры."""
     # Инициализация PyGame:
     pg.init()
-    # Тут нужно создать экземпляры классов.
     snake = Snake()
     apple = Apple()
 
     while True:
         clock.tick(SPEED)
         handle_keys(snake)
+        taken_positions = get_taken_positions(snake)
         snake.update_direction()
         snake.move()
         if apple.position == snake.get_head_position():
             snake.length += 1
-            apple.randomize_position()
+            apple.randomize_position(taken_positions)
         snake.draw()
         apple.draw()
-        if snake.positions[0] in snake.positions[1:-1]:
+        if snake.positions[0] in snake.positions[1:]:
+            screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset()
+            taken_positions = get_taken_positions(snake)
+            apple.randomize_position(taken_positions)
         pg.display.update()
 
 
