@@ -33,9 +33,6 @@ SPEED = 20
 # Центр экрана:
 DISPLAY_CENTRE = (320, 240)
 
-# Занятые клетки игрового поля:
-taken_positions: list[tuple] = []
-
 # Настройка игрового окна:
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
@@ -67,11 +64,11 @@ def get_taken_positions(snake):
 class Apple(GameObject):
     """'Яблоко', дочерний игровой объект."""
 
-    def __init__(self):
+    def __init__(self, taken_positions):
         """Метод ввода данных объекта 'Яблоко'."""
         super().__init__()
         self.body_color = APPLE_COLOR
-        self.position = self.randomize_position(taken_positions)
+        self.randomize_position(taken_positions)
 
     def randomize_position(self, list_of_taken_positions):
         """Метод выбора случаного расположения объекта 'Яблоко'."""
@@ -173,25 +170,24 @@ def main():
     # Инициализация PyGame:
     pg.init()
     snake = Snake()
-    apple = Apple()
+    apple = Apple(get_taken_positions(snake))
 
     while True:
-        clock.tick(SPEED)
         handle_keys(snake)
-        taken_positions = get_taken_positions(snake)
         snake.update_direction()
         snake.move()
         if apple.position == snake.get_head_position():
             snake.length += 1
-            apple.randomize_position(taken_positions)
-        snake.draw()
-        apple.draw()
-        if snake.positions[0] in snake.positions[1:]:
+            apple.randomize_position(get_taken_positions(snake))
+        if snake.get_head_position() in snake.positions[1:]:
             screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset()
             taken_positions = get_taken_positions(snake)
             apple.randomize_position(taken_positions)
+        snake.draw()
+        apple.draw()
         pg.display.update()
+        clock.tick(SPEED)
 
 
 if __name__ == '__main__':
