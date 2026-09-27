@@ -64,7 +64,7 @@ def get_taken_positions(snake):
 class Apple(GameObject):
     """'Яблоко', дочерний игровой объект."""
 
-    def __init__(self, taken_positions):
+    def __init__(self, taken_positions=None):
         """Метод ввода данных объекта 'Яблоко'."""
         super().__init__()
         self.body_color = APPLE_COLOR
