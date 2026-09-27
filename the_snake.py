@@ -68,8 +68,8 @@ class Apple(GameObject):
         """Метод ввода данных объекта 'Яблоко'."""
         super().__init__()
         self.body_color = APPLE_COLOR
-        check_positions = taken_positions if taken_positions is not None else []
-        self.randomize_position(check_positions)
+        check_position = taken_positions if taken_positions is not None else []
+        self.randomize_position(check_position)
 
     def randomize_position(self, list_of_taken_positions):
         """Метод выбора случаного расположения объекта 'Яблоко'."""
